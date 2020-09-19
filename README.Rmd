@@ -20,43 +20,22 @@ knitr::opts_chunk$set(
 [![CRAN status](https://www.r-pkg.org/badges/version/straystep)](https://CRAN.R-project.org/package=straystep)
 <!-- badges: end -->
 
-The goal of straystep is to ...
+The goal of straystep is to add a recipes:: step for the HDOutliers implementation stray::
+
+It's basically an experiment for me of building a step that's only used at train time, not inference.
+
+It almost certainly doesn't work yet!
 
 ## Installation
 
-You can install the released version of straystep from [CRAN](https://CRAN.R-project.org) with:
+straystep:: is not on CRAN!
 
-``` r
-install.packages("straystep")
-```
-
-And the development version from [GitHub](https://github.com/) with:
+You can install the development version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("mattsq/straystep")
 ```
-## Example
+## More
 
-This is a basic example which shows you how to solve a common problem:
-
-```{r example}
-library(straystep)
-## basic example code
-```
-
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
-```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub!
+I'll add more here once the package actually... definitely works.

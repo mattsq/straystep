@@ -75,7 +75,36 @@ step_hdoutliers <- function(
       id = id
     )
   )
-
 }
+
+step_hdoutliers_new <-
+  function(terms,
+           trained,
+           ref_dist,
+           outlier_cutoff_threshold,
+           k_neighbours,
+           knnsearchtype,
+           normalize_methood,
+           candidate_proportion,
+           threshold_sample_size,
+           options,
+           skip,
+           id) {
+    recipes::step(
+      subclass = "hdoutliers",
+      terms = terms,
+      trained = trained,
+      ref_dist = ref_dist,
+      outlier_cutoff_threshold = outlier_cutoff_threshold,
+      k_neighbours = k_neighbours,
+      knnsearchtype = knnsearchtype,
+      normalize_methood = normalize_methood,
+      candidate_proportion = candidate_proportion,
+      threshold_sample_size = threshold_sample_size,
+      options = options,
+      skip = skip,
+      id = id
+    )
+  }
 
 

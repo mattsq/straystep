@@ -136,7 +136,7 @@ prep.step_hdoutliers <- function(x, training, info = NULL, ...) {
   )
 
   lower_bound_call <- rlang::call2(return_outlier_bound, !!!args)
-  lower_bound <- eval(lower_bound)
+  lower_bound <- eval(lower_bound_call)
   args$outtail <- "max"
   upper_bound_call <- rlang::call2(return_outlier_bound, !!!args)
   upper_bound <- eval(upper_bound_call)

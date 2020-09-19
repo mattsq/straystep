@@ -181,10 +181,9 @@ bake.step_hdoutliers <- function(object, new_data, ...) {
   outliers_call <- rlang::call2("find_HDoutliers", !!!args, .ns = "stray")
   outliers_raw <- eval(outliers_call)
   new_outlier_scores <- outliers_raw$out_scores
-  excl_indexes <- c(
-    which(new_outlier_scores < object$outlier_bounds$lower_bound),
-    which(new_outlier_scores > object$outlier_bounds$upper_bound)
-  )
+  excl_indexes_lower <- which(new_outlier_scores < object$outlier_bounds$lower_bound)
+  excl_indexes_upper <-  which(new_outlier_scores > object$outlier_bounds$upper_bound)
+  excl_indexes <- c(excl_indexes_lower, excl_indexes_upper)
   new_data  <- new_data[-excl_indexes,]
 
   return(tibble::as_tibble(new_data))

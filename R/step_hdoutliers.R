@@ -28,14 +28,15 @@
 #' @importFrom recipes add_step step terms_select ellipse_check check_name
 #' @importFrom recipes rand_id bake prep
 #' @importFrom tibble as_tibble tibble
+#' @importFrom stray find_HDoutliers
 #' @export
 #' @details
-#' XXXX
+#' Some text here
 #'
 #' @references Add reference
 #'
 #' @examples
-#' XXX
+#' x <- 1
 
 step_hdoutliers <- function(
   recipe,

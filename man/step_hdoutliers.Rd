@@ -52,10 +52,10 @@ loading), and \code{component}.
 that will ....
 }
 \details{
-XXXX
+Some text here
 }
 \examples{
-XXX
+x <- 1
 }
 \references{
 Add reference

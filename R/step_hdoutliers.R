@@ -47,7 +47,7 @@ step_hdoutliers <- function(
   outlier_cutoff_threshold = .01,
   k_neighbours = 10,
   knnsearchtype = "brute",
-  normalize_method = "unitze",
+  normalize_method = "unitize",
   candidate_proportion = .5,
   threshold_sample_size = 50,
   options = list(),

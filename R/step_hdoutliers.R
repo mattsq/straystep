@@ -43,6 +43,7 @@ step_hdoutliers <- function(
   ...,
   role = NA,
   trained = FALSE,
+  reference_colnames = NULL,
   outlier_bounds = NULL,
   outlier_cutoff_threshold = .01,
   k_neighbours = 10,
@@ -64,6 +65,7 @@ step_hdoutliers <- function(
     step_hdoutliers_new(
       terms = terms,
       trained = trained,
+      reference_colnames = NULL,
       outlier_bounds = outlier_bounds,
       outlier_cutoff_threshold = outlier_cutoff_threshold,
       k_neighbours = k_neighbours,
@@ -81,6 +83,7 @@ step_hdoutliers <- function(
 step_hdoutliers_new <-
   function(terms,
            trained,
+           reference_colnames,
            outlier_bounds,
            outlier_cutoff_threshold,
            k_neighbours,
@@ -95,6 +98,7 @@ step_hdoutliers_new <-
       subclass = "hdoutliers",
       terms = terms,
       trained = trained,
+      reference_colnames = reference_colnames,
       outlier_bounds = outlier_bounds,
       outlier_cutoff_threshold = outlier_cutoff_threshold,
       k_neighbours = k_neighbours,
@@ -112,7 +116,6 @@ step_hdoutliers_new <-
 prep.step_hdoutliers <- function(x, training, info = NULL, ...) {
   col_names <- recipes::terms_select(terms = x$terms, info = info)
   ref_dist <- training[,col_names]
-
   args <- list(
     data = ref_dist,
     alpha = x$outlier_cutoff_threshold,
@@ -146,6 +149,7 @@ prep.step_hdoutliers <- function(x, training, info = NULL, ...) {
   step_hdoutliers_new(
     terms = x$terms,
     trained = TRUE,
+    reference_colnames = col_names,
     outlier_bounds = outlier_bounds,
     outlier_cutoff_threshold = x$outlier_cutoff_threshold,
     k_neighbours = x$k_neighbours,
@@ -162,8 +166,7 @@ prep.step_hdoutliers <- function(x, training, info = NULL, ...) {
 #' @export
 bake.step_hdoutliers <- function(object, new_data, ...) {
 
-  col_names <- recipes::terms_select(object$terms, info = summary(object))
-  new_data_used <- new_data[,col_names]
+  new_data_used <- new_data[,object$reference_colnames]
 
   args <- list(
     data = new_data_used,

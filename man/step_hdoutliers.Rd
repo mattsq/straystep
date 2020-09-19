@@ -9,6 +9,7 @@ step_hdoutliers(
   ...,
   role = NA,
   trained = FALSE,
+  reference_colnames = NULL,
   outlier_bounds = NULL,
   outlier_cutoff_threshold = 0.01,
   k_neighbours = 10,

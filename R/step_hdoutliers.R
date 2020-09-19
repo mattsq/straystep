@@ -160,7 +160,7 @@ prep.step_hdoutliers <- function(x, training, info = NULL, ...) {
 }
 
 #' @export
-bake.step_dwt <- function(object, new_data, ...) {
+bake.step_hdoutliers <- function(object, new_data, ...) {
   col_names <- recipes::terms_select(terms = object$terms)
   new_data_used <- new_data[,col_names]
 

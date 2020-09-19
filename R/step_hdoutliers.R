@@ -26,7 +26,7 @@
 #' @concept dwt
 #' @concept projection_methods
 #' @importFrom recipes add_step step terms_select ellipse_check check_name
-#' @importFrom recipes rand_id bake prep
+#' @importFrom recipes rand_id bake prep printer
 #' @importFrom tibble as_tibble tibble
 #' @importFrom stray find_HDoutliers
 #' @export
@@ -47,7 +47,7 @@ step_hdoutliers <- function(
   outlier_cutoff_threshold = .01,
   k_neighbours = 10,
   knnsearchtype = "brute",
-  normalize_methood = "unitze",
+  normalize_method = "unitze",
   candidate_proportion = .5,
   threshold_sample_size = 50,
   options = list(),
@@ -144,7 +144,7 @@ prep.step_hdoutliers <- function(x, training, info = NULL, ...) {
 
   outlier_bounds <- tibble::tibble(upper_bound = upper_bound, lower_bound = lower_bound)
 
-  step_dwt_new(
+  step_hdoutliers_new(
     terms = x$terms,
     trained = TRUE,
     outlier_bounds = outlier_bounds,
@@ -190,6 +190,6 @@ bake.step_dwt <- function(object, new_data, ...) {
 print.step_hdoutliers <- function (x, width = max(20, options()$width - 31), ...)
 {
   cat("HDOutliers Transformation for ", sep = "")
-  printer(names(x$models), x$terms, x$trained, width = width)
+  recipes::printer(names(x$models), x$terms, x$trained, width = width)
   invisible(x)
 }

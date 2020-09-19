@@ -13,7 +13,7 @@ step_hdoutliers(
   outlier_cutoff_threshold = 0.01,
   k_neighbours = 10,
   knnsearchtype = "brute",
-  normalize_methood = "unitze",
+  normalize_method = "unitze",
   candidate_proportion = 0.5,
   threshold_sample_size = 50,
   options = list(),

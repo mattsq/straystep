@@ -64,6 +64,7 @@ step_hdoutliers <- function(
     recipe,
     step_hdoutliers_new(
       terms = terms,
+      role = role,
       trained = trained,
       reference_colnames = NULL,
       outlier_bounds = outlier_bounds,
@@ -82,6 +83,7 @@ step_hdoutliers <- function(
 
 step_hdoutliers_new <-
   function(terms,
+           role,
            trained,
            reference_colnames,
            outlier_bounds,
@@ -97,6 +99,7 @@ step_hdoutliers_new <-
     recipes::step(
       subclass = "hdoutliers",
       terms = terms,
+      role = role,
       trained = trained,
       reference_colnames = reference_colnames,
       outlier_bounds = outlier_bounds,
@@ -148,6 +151,7 @@ prep.step_hdoutliers <- function(x, training, info = NULL, ...) {
 
   step_hdoutliers_new(
     terms = x$terms,
+    role = x$role,
     trained = TRUE,
     reference_colnames = col_names,
     outlier_bounds = outlier_bounds,

@@ -123,12 +123,9 @@ prep.step_hdoutliers <- function(x, training, info = NULL, ...) {
     tn = x$threshold_sample_size
   )
 
-  outlier_call <- dplyr::expr(stray::find_HDoutliers(data = NULL))
-
-  outliers <- rlang::call2(outlier_call, !!!args) %>% eval()
+  outliers_call <- rlang::call2("find_HDoutliers", !!!args, .ns = "stray")
+  outliers <- eval(outliers_call)
   scores <- outliers$out_scores
-
-  bound_call <- dplyr::expr(return_outlier_bound(outlier_score = NULL))
 
   args <- list(
     outlier_score = scores,
@@ -138,9 +135,11 @@ prep.step_hdoutliers <- function(x, training, info = NULL, ...) {
     tn = x$threshold_sample_size
   )
 
-  lower_bound <- rlang::call2(bound_call, !!!args) %>% eval()
+  lower_bound_call <- rlang::call2(return_outlier_bound, !!!args)
+  lower_bound <- eval(lower_bound)
   args$outtail <- "max"
-  upper_bound <- rlang::call2(bound_call, !!!args) %>% eval()
+  upper_bound_call <- rlang::call2(return_outlier_bound, !!!args)
+  upper_bound <- eval(upper_bound_call)
 
   outlier_bounds <- tibble::tibble(upper_bound = upper_bound, lower_bound = lower_bound)
 
@@ -174,8 +173,9 @@ bake.step_dwt <- function(object, new_data, ...) {
     p = object$candidate_proportion,
     tn = object$threshold_sample_size
   )
-  outlier_call <- dplyr::expr(stray::find_HDoutliers(data = NULL))
-  outliers_raw <- rlang::call2(outlier_call, !!!args) %>% eval()
+
+  outliers_call <- rlang::call2("find_HDoutliers", !!!args, .ns = "stray")
+  outliers_raw <- eval(outliers_call)
   new_outlier_scores <- outliers_raw$out_scores
   excl_indexes <- c(
     which(new_outlier_scores < object$outlier_bounds$lower_bound),

@@ -162,7 +162,7 @@ prep.step_hdoutliers <- function(x, training, info = NULL, ...) {
 #' @export
 bake.step_hdoutliers <- function(object, new_data, ...) {
 
-  col_names <- recipes::terms_select(terms = summary(object))
+  col_names <- recipes::terms_select(object$terms, info = summary(object))
   new_data_used <- new_data[,col_names]
 
   args <- list(

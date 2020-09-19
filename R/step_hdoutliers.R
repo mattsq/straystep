@@ -42,7 +42,7 @@ step_hdoutliers <- function(
   ...,
   role = NA,
   trained = FALSE,
-  ref_dist = NULL,
+  outlier_bounds = NULL,
   outlier_cutoff_threshold = .01,
   k_neighbours = 10,
   knnsearchtype = "brute",
@@ -63,11 +63,11 @@ step_hdoutliers <- function(
     step_hdoutliers_new(
       terms = terms,
       trained = trained,
-      ref_dist = ref_dist,
+      outlier_bounds = outlier_bounds,
       outlier_cutoff_threshold = outlier_cutoff_threshold,
       k_neighbours = k_neighbours,
       knnsearchtype = knnsearchtype,
-      normalize_methood = normalize_methood,
+      normalize_method = normalize_method,
       candidate_proportion = candidate_proportion,
       threshold_sample_size = threshold_sample_size,
       options = options,
@@ -80,11 +80,11 @@ step_hdoutliers <- function(
 step_hdoutliers_new <-
   function(terms,
            trained,
-           ref_dist,
+           outlier_bounds,
            outlier_cutoff_threshold,
            k_neighbours,
            knnsearchtype,
-           normalize_methood,
+           normalize_method,
            candidate_proportion,
            threshold_sample_size,
            options,
@@ -94,11 +94,11 @@ step_hdoutliers_new <-
       subclass = "hdoutliers",
       terms = terms,
       trained = trained,
-      ref_dist = ref_dist,
+      outlier_bounds = outlier_bounds,
       outlier_cutoff_threshold = outlier_cutoff_threshold,
       k_neighbours = k_neighbours,
       knnsearchtype = knnsearchtype,
-      normalize_methood = normalize_methood,
+      normalize_method = normalize_method,
       candidate_proportion = candidate_proportion,
       threshold_sample_size = threshold_sample_size,
       options = options,
@@ -107,4 +107,88 @@ step_hdoutliers_new <-
     )
   }
 
+#' @export
+prep.step_hdoutliers <- function(x, training, info = NULL, ...) {
+  col_names <- recipes::terms_select(terms = x$terms, info = info)
+  ref_dist <- training[,col_names]
 
+  args <- list(
+    data = ref_dist,
+    alpha = x$outlier_cutoff_threshold,
+    k = x$k_neighbours,
+    knnsearchtype = x$knnsearchtype,
+    normalize = x$normalize_method,
+    p = x$candidate_proportion,
+    tn = x$threshold_sample_size
+  )
+
+  outlier_call <- dplyr::expr(stray::find_HDoutliers(data = NULL))
+
+  outliers <- rlang::call2(outlier_call, !!!args)
+  scores <- outliers$out_scores
+
+  bound_call <- dplyr::expr(return_outlier_bound(outlier_score = NULL))
+
+  args <- list(
+    outlier_score = scores,
+    alpha = x$outlier_cutoff_threshold,
+    outtail = "min",
+    p = x$candidate_proportion,
+    tn = x$threshold_sample_size
+  )
+
+  lower_bound <- rlang::call2(bound_call, !!!args)
+  args$outtail <- "max"
+  upper_bound <- rlang::call2(bound_call, !!!args)
+
+  outlier_bounds <- tibble::tibble(upper_bound = upper_bound, lower_bound = lower_bound)
+
+  step_dwt_new(
+    terms = x$terms,
+    trained = TRUE,
+    outlier_bounds = outlier_bounds,
+    outlier_cutoff_threshold = x$outlier_cutoff_threshold,
+    k_neighbours = x$k_neighbours,
+    knnsearchtype = x$knnsearchtype,
+    normalize_method = x$normalize_method,
+    candidate_proportion = x$candidate_proportion,
+    threshold_sample_size = x$threshold_sample_size,
+    options = x$options,
+    skip = x$skip,
+    id = x$id
+  )
+}
+
+#' @export
+bake.step_dwt <- function(object, new_data, ...) {
+  col_names <- recipes::terms_select(terms = object$terms)
+  new_data_used <- new_data[,col_names]
+
+  args <- list(
+    data = new_data_used,
+    alpha = object$outlier_cutoff_threshold,
+    k = object$k_neighbours,
+    knnsearchtype = object$knnsearchtype,
+    normalize = object$normalize_method,
+    p = object$candidate_proportion,
+    tn = object$threshold_sample_size
+  )
+  outlier_call <- dplyr::expr(stray::find_HDoutliers(data = NULL))
+  outliers_raw <- rlang::call2(outlier_call, !!!args)
+  new_outlier_scores <- outliers_raw$out_scores
+  excl_indexes <- c(
+    which(new_outlier_scores < object$outlier_bounds$lower_bound),
+    which(new_outlier_scores > object$outlier_bounds$upper_bound)
+  )
+  new_data  <- new_data[-excl_indexes,]
+
+  return(tibble::as_tibble(new_data))
+}
+
+#' @export
+print.step_hdoutliers <- function (x, width = max(20, options()$width - 31), ...)
+{
+  cat("HDOutliers Transformation for ", sep = "")
+  printer(names(x$models), x$terms, x$trained, width = width)
+  invisible(x)
+}

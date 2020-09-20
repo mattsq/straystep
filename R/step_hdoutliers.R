@@ -48,10 +48,9 @@ step_hdoutliers <- function(
   outlier_cutoff_threshold = .01,
   k_neighbours = 10,
   knnsearchtype = "brute",
-  normalize_method = "unitize",
   candidate_proportion = .5,
   threshold_sample_size = 50,
-  options = list(),
+  options = list(normalize_method = "none"),
   skip = FALSE,
   id = recipes::rand_id("hdout")
 ) {
@@ -71,7 +70,6 @@ step_hdoutliers <- function(
       outlier_cutoff_threshold = outlier_cutoff_threshold,
       k_neighbours = k_neighbours,
       knnsearchtype = knnsearchtype,
-      normalize_method = normalize_method,
       candidate_proportion = candidate_proportion,
       threshold_sample_size = threshold_sample_size,
       options = options,
@@ -90,7 +88,6 @@ step_hdoutliers_new <-
            outlier_cutoff_threshold,
            k_neighbours,
            knnsearchtype,
-           normalize_method,
            candidate_proportion,
            threshold_sample_size,
            options,
@@ -106,7 +103,6 @@ step_hdoutliers_new <-
       outlier_cutoff_threshold = outlier_cutoff_threshold,
       k_neighbours = k_neighbours,
       knnsearchtype = knnsearchtype,
-      normalize_method = normalize_method,
       candidate_proportion = candidate_proportion,
       threshold_sample_size = threshold_sample_size,
       options = options,
@@ -124,7 +120,7 @@ prep.step_hdoutliers <- function(x, training, info = NULL, ...) {
     alpha = x$outlier_cutoff_threshold,
     k = x$k_neighbours,
     knnsearchtype = x$knnsearchtype,
-    normalize = x$normalize_method,
+    normalize = x$options$normalize_method,
     p = x$candidate_proportion,
     tn = x$threshold_sample_size
   )
@@ -158,7 +154,6 @@ prep.step_hdoutliers <- function(x, training, info = NULL, ...) {
     outlier_cutoff_threshold = x$outlier_cutoff_threshold,
     k_neighbours = x$k_neighbours,
     knnsearchtype = x$knnsearchtype,
-    normalize_method = x$normalize_method,
     candidate_proportion = x$candidate_proportion,
     threshold_sample_size = x$threshold_sample_size,
     options = x$options,
@@ -177,7 +172,7 @@ bake.step_hdoutliers <- function(object, new_data, ...) {
     alpha = object$outlier_cutoff_threshold,
     k = object$k_neighbours,
     knnsearchtype = object$knnsearchtype,
-    normalize = object$normalize_method,
+    normalize = object$options$normalize_method,
     p = object$candidate_proportion,
     tn = object$threshold_sample_size
   )
@@ -196,7 +191,7 @@ bake.step_hdoutliers <- function(object, new_data, ...) {
 #' @export
 print.step_hdoutliers <- function (x, width = max(20, options()$width - 31), ...)
 {
-  cat("HDOutliers Transformation for ", sep = "")
+  cat("HDOutliers removal for ", sep = "")
   recipes::printer(names(x$models), x$terms, x$trained, width = width)
   invisible(x)
 }

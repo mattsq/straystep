@@ -14,10 +14,9 @@ step_hdoutliers(
   outlier_cutoff_threshold = 0.01,
   k_neighbours = 10,
   knnsearchtype = "brute",
-  normalize_method = "unitize",
   candidate_proportion = 0.5,
   threshold_sample_size = 50,
-  options = list(),
+  options = list(normalize_method = "none"),
   skip = FALSE,
   id = recipes::rand_id("hdout")
 )

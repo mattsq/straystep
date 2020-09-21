@@ -183,7 +183,11 @@ bake.step_hdoutliers <- function(object, new_data, ...) {
   excl_indexes_lower <- which(-new_outlier_scores > object$outlier_bounds$lower_bound)
   excl_indexes_upper <- which(new_outlier_scores > object$outlier_bounds$upper_bound)
   excl_indexes <- c(excl_indexes_lower, excl_indexes_upper)
-  new_data  <- new_data[-excl_indexes,]
+  if (length(excl_indexes) == nrow(new_data)) {
+    warning("Bake step removed all rows in the new data. Returning the original dataset instead - try tuning the parameters...")
+  } else {
+    new_data  <- new_data[-excl_indexes,]
+  }
 
   return(tibble::as_tibble(new_data))
 }

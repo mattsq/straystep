@@ -23,4 +23,5 @@ Imports:
     magrittr,
     tibble,
     dplyr,
-    rlang
+    rlang,
+    purrr

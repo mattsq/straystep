@@ -29,6 +29,7 @@
 #' @importFrom recipes rand_id bake prep printer
 #' @importFrom tibble as_tibble tibble
 #' @importFrom stray find_HDoutliers
+#' @importFrom purrr is_empty
 #' @export
 #' @details
 #' Some text here
@@ -185,7 +186,7 @@ bake.step_hdoutliers <- function(object, new_data, ...) {
   excl_indexes <- c(excl_indexes_lower, excl_indexes_upper)
   if (length(excl_indexes) == nrow(new_data)) {
     warning("Bake step removed all rows in the new data. Returning the original dataset instead - try tuning the parameters...")
-  } else {
+  } else if (!purrr::is_empty(excl_indexes)) {
     new_data  <- new_data[-excl_indexes,]
   }
 

@@ -2,7 +2,7 @@
 .onLoad <- function(libname, pkgname) {
   # This package has specific methods for the `tunable` generic. That generic
   # is defined in the `tune` package. As of R 4.0, we need to register them.
-  #  s3_register("tune::tunable", "step_hdoutliers")
+    s3_register("tune::tunable", "step_hdoutliers")
 }
 
 s3_register <- function(generic, class, method = NULL) {

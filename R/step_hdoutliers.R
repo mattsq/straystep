@@ -52,7 +52,7 @@ step_hdoutliers <- function(
   candidate_proportion = .5,
   threshold_sample_size = 50,
   options = list(normalize_method = "none"),
-  skip = FALSE,
+  skip = TRUE,
   id = recipes::rand_id("hdout")
 ) {
   ## The variable selectors are not immediately evaluated by using

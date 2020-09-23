@@ -197,6 +197,6 @@ bake.step_hdoutliers <- function(object, new_data, ...) {
 print.step_hdoutliers <- function (x, width = max(20, options()$width - 31), ...)
 {
   cat("HDOutliers removal for ", sep = "")
-  recipes::printer(names(x$models), x$terms, x$trained, width = width)
+  recipes::printer(x$reference_colnames, x$terms, x$trained, width = width)
   invisible(x)
 }
